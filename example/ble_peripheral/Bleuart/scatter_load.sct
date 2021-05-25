@@ -38,7 +38,6 @@ LR_IROM3  0x11020000 0x020000 {
    peripheral.o(+RO)
    ;simplebleperipheral.o(+RO)
    bleuart.o(+RO)
-   bleuart_protocol.o(+RO)
    bleuart_service.o(+RO)
    ;led_light.o(+RO)
 ;   ota_app_service.O(+RO)

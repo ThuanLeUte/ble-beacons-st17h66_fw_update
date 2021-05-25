@@ -494,11 +494,6 @@
               <FilePath>..\..\..\components\profiles\ota_app\ota_app_service.c</FilePath>
             </File>
             <File>
-              <FileName>sbpProfile_ota.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\source\sbpProfile_ota.c</FilePath>
-            </File>
-            <File>
               <FileName>devinfoservice.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\components\profiles\DevInfo\devinfoservice.c</FilePath>
@@ -544,11 +539,6 @@
               <FilePath>.\source\bleuart_Main.c</FilePath>
             </File>
             <File>
-              <FileName>bleuart_protocol.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\source\bleuart_protocol.c</FilePath>
-            </File>
-            <File>
               <FileName>bleuart_service.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\source\bleuart_service.c</FilePath>
@@ -557,6 +547,16 @@
               <FileName>OSAL_bleuart.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\source\OSAL_bleuart.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\source\bsp.c</FilePath>
+            </File>
+            <File>
+              <FileName>ble_misc_services.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\source\ble_misc_services.c</FilePath>
             </File>
           </Files>
         </Group>

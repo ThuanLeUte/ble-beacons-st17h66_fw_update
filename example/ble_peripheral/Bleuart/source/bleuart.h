@@ -15,7 +15,6 @@
 
 #include "types.h" 
 #include "rf_phy_driver.h"
-#include "bleuart_protocol.h"
 /*********************************************************************
  * INCLUDES
  */
@@ -41,17 +40,14 @@
 #define BUP_OSAL_EVT_UARTRX_TIMER                         0x0080
 #define BUP_OSAL_EVT_UART_TX_COMPLETE                     0x0100
 #define BUP_OSAL_EVT_UART_TO_TIMER                        0x0200
-#define BUP_OSAL_EVT_RF433_KEY                            0x0400// chendy add just for
-#define BUP_OSAL_EVT_AT                            		  0x0800// JFM add for AT
+#define BUP_OSAL_EVT_RF433_KEY                            0x0400
+#define BUP_OSAL_EVT_AT                                   0x0800
 
 
-//#define FLOW_CTRL_IO_UART_TX          P18 //mobile --> ble --> uart --> host
-//#define FLOW_CTRL_IO_BLE_TX           P23 //host-->uart-->ble-->mobile
-
-#define UART_TX_PIN					  P34	//串口TX引脚
-#define UART_RX_PIN					  P2	//串口RX引脚
-#define FLOW_CTRL_IO_HOST_WAKEUP      P15 	//串口低功耗模式唤醒脚
-#define UART_INDICATE_LED             P14	//蓝牙连接指示灯
+#define UART_TX_PIN					  P34
+#define UART_RX_PIN					  P2
+#define FLOW_CTRL_IO_HOST_WAKEUP      P15
+#define UART_INDICATE_LED             P14
 
 //#define FLOW_CTRL_IO_BLE_CONNECTION   P20 //indicate host 620x BLE connection status: 1: connected; 0: advertising
 
@@ -73,10 +69,8 @@ extern uint16 gapConnHandle;
 
 
 void bleuart_Init( uint8 task_id );
-uint16_t bleuart_conn_interval(void);
 uint16 bleuart_ProcessEvent( uint8 task_id, uint16 events );
 
-extern void on_BUP_Evt(BUP_Evt_t* pev);
 extern uint8 Modify_BLEDevice_Data;
 extern uint8  advint;
 extern uint8 AT_bleuart_auto;
