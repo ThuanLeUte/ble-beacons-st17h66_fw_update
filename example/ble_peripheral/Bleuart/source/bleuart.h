@@ -84,7 +84,7 @@ extern uint8*scanR;
 extern uint8*advertdata;
 extern uint8 Modify_Mac_Data;
 extern uint8 AT_cnt_advdata;
-
+extern uint16 gapConnHandle;
 
 
 /*********************************************************************

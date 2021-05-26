@@ -31,7 +31,7 @@
 
 #define CHAR_IDENTIFICATION_VALUE_POS      (2)
 #define CHAR_MODE_SELECTION_VALUE_POS      (4)
-#define CHAR_CLICK_COUNT_VALUE_POS         (2)
+#define CHAR_CLICK_COUNT_VALUE_POS         (6)
 #define CHAR_BOTTLE_REPLACEMENT_VALUE_POS  (8)
 
 /* Private Macros ----------------------------------------------------------- */
@@ -78,9 +78,6 @@ uint8_t MCS_CHAR_PROPS[] =
 
 // Profile Service attribute
 static CONST gattAttrType_t mcs_service = { ATT_BT_UUID_SIZE, MCS_UUID };
-
-static gattCharCfg_t simpleProfileChar2Config;
-
 
 // Profile struct
 static struct
@@ -157,13 +154,6 @@ static gattAttribute_t mcs_atrr_tbl[] =
     GATT_PERMIT_READ | GATT_PERMIT_WRITE,
     0,
     m_mcs.chars.value.click_count
-  },
-
-  {
-    { ATT_BT_UUID_SIZE, clientCharCfgUUID },
-    GATT_PERMIT_READ | GATT_PERMIT_WRITE,
-    0,
-    (uint8 *)&simpleProfileChar2Config
   },
 
   // Characteristic Bottle Replacement Declaration

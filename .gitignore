@@ -29,18 +29,21 @@
 *.dylib
 
 # Executables
-*.exe
 *.out
 *.app
 *.i*86
 *.x86_64
-*.hex
+
 
 # Debug files
 *.dSYM/
 *.su
 *.idb
 *.pdb
+*.lst
+*.hexf
+*.Admin
+*.asm
 
 # Kernel Module Compile Results
 *.mod*
@@ -50,3 +53,4 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+Objects
