@@ -31,6 +31,7 @@
 ".\objects\ble_misc_services.o"
 ".\objects\damos_ram.o"
 ".\objects\sys.o"
+".\objects\ble_timer.o"
 ".\objects\startup_armcm0.o"
 ".\objects\system_armcm0.o"
 --library_type=microlib --scatter ".\scatter_load.sct"

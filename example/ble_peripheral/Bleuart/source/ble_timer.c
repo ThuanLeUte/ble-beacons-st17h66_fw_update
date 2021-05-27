@@ -13,15 +13,21 @@
 #include "ble_timer.h"
 #include "OSAL.h"
 
+uint8_t m_task_id = 0;
 /* Function definitions ----------------------------------------------- */
 void ble_timer_1s_init(uint8_t task_id)
 {
-  osal_start_reload_timer(task_id, TIMER_1000_MS_EVT, 1000);
+  m_task_id = task_id;
 }
 
-void ble_timer_stop(uint8_t task_id, uint16_t event_id)
+void ble_timer_start(uint16_t event_id)
 {
-  osal_stop_timerEx(task_id, event_id);
+  osal_start_timerEx(m_task_id, TIMER_1000_MS_EVT, 1000 * 60);
+}
+
+void ble_timer_stop(uint16_t event_id)
+{
+  osal_stop_timerEx(m_task_id, event_id);
 }
 
 uint16_t ble_timer_process_event(uint8_t task_id, uint16_t events)

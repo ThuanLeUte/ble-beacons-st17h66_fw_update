@@ -568,6 +568,11 @@
               <FileType>1</FileType>
               <FilePath>.\source\sys.c</FilePath>
             </File>
+            <File>
+              <FileName>ble_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\source\ble_timer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

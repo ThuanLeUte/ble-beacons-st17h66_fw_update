@@ -54,7 +54,8 @@ void ble_timer_1s_init(uint8_t task_id);
  *
  * @return          None
  */
-void ble_timer_stop(uint8_t task_id, uint16_t event_id);
+void ble_timer_stop( uint16_t event_id);
+void ble_timer_start( uint16_t event_id);
 
 /**
  * @brief           Timer process event 

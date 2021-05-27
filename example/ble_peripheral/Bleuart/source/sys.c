@@ -32,6 +32,8 @@ void bsp_pin_event_handler(GPIO_Pin_e pin, IO_Wakeup_Pol_e type)
   hal_gpio_write(LED_INDICATE, 1);
   if (USER_BUTTON == pin)
   {
+    ble_timer_start(TIMER_1000_MS_EVT);
+
     if (++g_dispenser.click_count == 5)
     {
       LOG("Send notify click count: %d\n", g_dispenser.click_count);
@@ -41,21 +43,27 @@ void bsp_pin_event_handler(GPIO_Pin_e pin, IO_Wakeup_Pol_e type)
   }
   else if (HALL_SENSOR_LOGIC == pin)
   {
+    ble_timer_start(TIMER_1000_MS_EVT);
+
     if (++g_dispenser.click_count == 5)
     {
       LOG("Send notify click count: %d\n", g_dispenser.click_count);
       m_ble_notify_humi();
       g_dispenser.click_count = 0;
+      ble_timer_stop(TIMER_1000_MS_EVT);
     }
   }
 
-  LOG("Pin event handler: %d\n", pin);
+  LOG("Button count: %d\n", g_dispenser.click_count);
   hal_gpio_write(LED_INDICATE, 0);
 }
 
 void periodic_1s_callback(void)
 {
-
+  LOG("Send notify click count: %d\n", g_dispenser.click_count);
+  m_ble_notify_humi();
+  g_dispenser.click_count = 0;
+  ble_timer_stop(TIMER_1000_MS_EVT);
 }
 
 /* End of file -------------------------------------------------------- */
