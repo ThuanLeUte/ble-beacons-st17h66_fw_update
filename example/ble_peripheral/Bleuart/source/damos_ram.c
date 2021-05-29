@@ -14,5 +14,12 @@
 
 /* Function definitions ----------------------------------------------- */
 /* Public variables --------------------------------------------------- */
-device_t g_dispenser;
+device_t g_dispenser =
+{
+  .identification     = 123456789,
+  .mode_selected      = 1,
+  .click_count        = 0,
+  .bottle_replacement = 0,
+};
+
 /* End of file -------------------------------------------------------- */

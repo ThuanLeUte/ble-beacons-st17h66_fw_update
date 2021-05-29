@@ -17,8 +17,7 @@
 #include "stdint.h"
 
 /* Public defines ---------------------------------------------------- */
-#define TIMER_1000_MS_EVT   (0x0001)
-#define TIMER_50_MS_EVT     (0x0004)
+#define TIMER_EXPIRED_CLICK_EVT   (60) // 60 Seconds
 
 /* Public Callbacks -------------------------------------------------- */
 /**
@@ -30,7 +29,7 @@
  * 
  * @return          None
  */
-void periodic_1s_callback(void); 
+void ble_timer_callback(void); 
 
 /* Public function prototypes ----------------------------------------- */
 /**
@@ -42,7 +41,7 @@ void periodic_1s_callback(void);
  *
  * @return          None
  */
-void ble_timer_1s_init(uint8_t task_id);
+void ble_timer_init(uint8_t task_id);
 
 /**
  * @brief           Timer stop

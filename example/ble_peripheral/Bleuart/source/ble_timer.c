@@ -13,16 +13,24 @@
 #include "ble_timer.h"
 #include "OSAL.h"
 
-uint8_t m_task_id = 0;
+/* Private define ----------------------------------------------------- */
+#define TIMER_EXPIRED_CLICK     (60 * 1000) // 60 Seconds
+
+/* Private variable --------------------------------------------------- */
+static uint8_t m_task_id = 0;
+
 /* Function definitions ----------------------------------------------- */
-void ble_timer_1s_init(uint8_t task_id)
+void ble_timer_init(uint8_t task_id)
 {
   m_task_id = task_id;
 }
 
 void ble_timer_start(uint16_t event_id)
 {
-  osal_start_timerEx(m_task_id, TIMER_1000_MS_EVT, 1000 * 60);
+  if (event_id == TIMER_EXPIRED_CLICK_EVT)
+  {
+    osal_start_timerEx(m_task_id, event_id, TIMER_EXPIRED_CLICK);
+  }
 }
 
 void ble_timer_stop(uint16_t event_id)
@@ -32,10 +40,10 @@ void ble_timer_stop(uint16_t event_id)
 
 uint16_t ble_timer_process_event(uint8_t task_id, uint16_t events)
 {
-  if (events & TIMER_1000_MS_EVT)
+  if (events & TIMER_EXPIRED_CLICK_EVT)
   {
-    periodic_1s_callback();
-    return (events ^ TIMER_1000_MS_EVT);
+    ble_timer_callback();
+    return (events ^ TIMER_EXPIRED_CLICK_EVT);
   }
   return 0;
 }

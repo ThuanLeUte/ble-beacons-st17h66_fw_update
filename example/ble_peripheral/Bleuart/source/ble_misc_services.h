@@ -29,6 +29,27 @@ typedef enum
 }
 mcs_id_t;
 
+typedef enum
+{
+  MSC_EVT_IDENTIFICATON_RECEIVED,
+  MSC_EVT_MODE_RECEIVED,
+  MSC_EVT_IDENTIFICATON_READ,
+  MSC_EVT_MODE_READ,
+  MSC_EVT_CLICK_COUNT_READ,
+  MSC_EVT_BOTTLE_REPLACEMENT_READ
+}
+mcs_evt_id_t;
+
+typedef struct
+{
+  mcs_evt_id_t  evt_id;
+  mcs_id_t      char_id;
+  void*         data;
+}
+mcs_evt_t;
+
+typedef void (*mcs_cb_t)(mcs_evt_t* pev);
+
 /* Public function prototypes ----------------------------------------- */
 /**
  * @brief      Initializes the BLE service by registering
@@ -40,7 +61,7 @@ mcs_id_t;
  *  - 0: Success
  *  - 1: Failure
  */
-bStatus_t mcs_add_service(void);
+bStatus_t mcs_add_service(mcs_cb_t cb);
 
 /**
  * @brief      Set characterictics value.
@@ -56,8 +77,7 @@ bStatus_t mcs_add_service(void);
  *  - SUCCESS
  *  - INVALIDPARAMETER
  */
-bStatus_t mcs_set_parameter(mcs_id_t char_id, uint8 len, void *value);
-
+bStatus_t mcs_set_parameter(mcs_id_t char_id, void *value);
 /**
  * @brief      Get characterictics value.
  *

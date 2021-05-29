@@ -49,6 +49,10 @@ void bsp_init(void);
  */
 void bsp_pin_event_handler(GPIO_Pin_e pin, IO_Wakeup_Pol_e type);
 
+uint8_t bsp_flash_erase(uint32_t section_to_erase);
+uint8_t bsp_flash_write(uint32_t addr, uint8_t *data , uint32_t len);
+uint8_t bsp_flash_read(uint32_t addr, uint8_t *data, uint32_t len);
+
 #endif // __BSP_H
 
 /* End of file ------------------------------------------------------- */

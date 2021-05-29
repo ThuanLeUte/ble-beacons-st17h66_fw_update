@@ -114,7 +114,7 @@ void osalInitTasks( void )
   /* Application */
   bleuart_Init( taskID++);
 
-  ble_timer_1s_init(taskID);
+  ble_timer_init(taskID);
 }
 
 /*********************************************************************

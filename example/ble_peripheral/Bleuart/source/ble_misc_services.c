@@ -20,14 +20,14 @@
 #include "gatt_uuid.h"
 #include "gattservapp.h"
 #include "gapbondmgr.h"
-
+#include "damos_ram.h"
 
 /* Private Defines ---------------------------------------------------------- */
 #define MCS_UUID_SERV                      (0xFFF0)
 #define MCS_UUID_CHAR_IDENTIFICATION       (0xFFF1)
 #define MCS_UUID_CHAR_MODE_SELECTION       (0xFFF2)
 #define MCS_UUID_CHAR_CLICK_AVAILABLE      (0xFFF3)
-#define MCS_UUID_CHAR_BOTTLE_REPLACEMENT   (0xFFF5)
+#define MCS_UUID_CHAR_BOTTLE_REPLACEMENT   (0xFFF4)
 
 #define CHAR_IDENTIFICATION_VALUE_POS      (2)
 #define CHAR_MODE_SELECTION_VALUE_POS      (4)
@@ -82,6 +82,7 @@ static CONST gattAttrType_t mcs_service = { ATT_BT_UUID_SIZE, MCS_UUID };
 // Profile struct
 static struct
 {
+  mcs_cb_t app_cb;
   struct
   {
     struct
@@ -89,7 +90,7 @@ static struct
       uint8_t identification[4];     // Charaterictic identification value;
       uint8_t mode_selection[1];     // Charaterictic mode selection value;
       uint8_t click_count[1];        // Charaterictic click availble value
-      uint8_t bottle_replacement[4]; // Charaterictic bottle replacement value;
+      uint8_t bottle_replacement[1]; // Charaterictic bottle replacement value;
     }
     value;
   }
@@ -169,7 +170,7 @@ static gattAttribute_t mcs_atrr_tbl[] =
     {ATT_BT_UUID_SIZE, MCS_CHAR_BOTTLE_REPLACEMENT_UUID},
     GATT_PERMIT_READ | GATT_PERMIT_WRITE,
     0,
-    m_mcs.chars.value.mode_selection
+    m_mcs.chars.value.bottle_replacement
   },
 };
 
@@ -198,7 +199,7 @@ static CONST gattServiceCBs_t mcs_callbacks =
 };
 
 /* Public function ----------------------------------------- */
-bStatus_t mcs_add_service(void)
+bStatus_t mcs_add_service(mcs_cb_t cb)
 {
   uint8 status = SUCCESS;
 
@@ -209,29 +210,31 @@ bStatus_t mcs_add_service(void)
 
   LOG("mcs_add_service:%x\n", status);
 
+  m_mcs.app_cb = cb;
+
   return ( status );
 }
 
-bStatus_t mcs_set_parameter(mcs_id_t char_id, uint8 len, void *value)
+bStatus_t mcs_set_parameter(mcs_id_t char_id, void *value)
 {
   bStatus_t ret = SUCCESS;
 
   switch (char_id)
   {
   case MCS_ID_CHAR_CLICK_COUNT:
-    osal_memcpy(m_mcs.chars.value.click_count, value, len);
+    osal_memcpy(m_mcs.chars.value.click_count, value, sizeof(m_mcs.chars.value.click_count));
     break;
 
   case MCS_ID_CHAR_IDENTIFICATON:
-    osal_memcpy(m_mcs.chars.value.identification, value, len);
+    osal_memcpy(m_mcs.chars.value.identification, value, sizeof(m_mcs.chars.value.identification));
     break;
 
   case MCS_ID_CHAR_MODE_SELECTION:
-    osal_memcpy(m_mcs.chars.value.mode_selection, value, len);
+    osal_memcpy(m_mcs.chars.value.mode_selection, value, sizeof(m_mcs.chars.value.mode_selection));
     break;
 
   case MCS_ID_CHAR_BOTTLE_REPLACEMENT:
-    osal_memcpy(m_mcs.chars.value.bottle_replacement, value, len);
+    osal_memcpy(m_mcs.chars.value.bottle_replacement, value, sizeof(m_mcs.chars.value.bottle_replacement));
     break;
 
   default:
@@ -328,6 +331,8 @@ static bStatus_t mcs_write_attr_cb(uint16          conn_handle,
                                   uint16           offset)
 {
   bStatus_t status = SUCCESS;
+  mcs_evt_t evt;
+
   LOG("Miscellaneous write callback\n");
 
   // If attribute permissions require authorization to write, return error
@@ -342,12 +347,16 @@ static bStatus_t mcs_write_attr_cb(uint16          conn_handle,
     {
     case MCS_UUID_CHAR_IDENTIFICATION:
       osal_memcpy(m_mcs.chars.value.identification, p_value, 4);
-      LOG("Write MCS_UUID_CHAR_IDENTIFICATION:\n");
+
+      evt.evt_id = MSC_EVT_IDENTIFICATON_RECEIVED;
+      m_mcs.app_cb(&evt);
       break;
 
     case MCS_UUID_CHAR_MODE_SELECTION:
-      LOG("Write MCS_UUID_CHAR_MODE_SELECTION:\n");
       osal_memcpy(m_mcs.chars.value.mode_selection, p_value, 1);
+
+      evt.evt_id = MSC_EVT_MODE_RECEIVED;
+      m_mcs.app_cb(&evt);
       break;
 
     default:
@@ -378,7 +387,57 @@ static uint8 mcs_read_attr_cb(uint16 conn_handle,
                               uint8 max_len)
 {
   bStatus_t status = SUCCESS;
+  mcs_evt_t evt;
+
   LOG("Miscellaneous read callback\n");
+
+  // If attribute permissions require authorization to write, return error
+  if (gattPermitAuthorWrite(p_attr->permissions))
+    return (ATT_ERR_INSUFFICIENT_AUTHOR); // Insufficient authorization
+
+  if (p_attr->type.len == ATT_BT_UUID_SIZE)
+  {
+    uint16 uuid = BUILD_UINT16(p_attr->type.uuid[0], p_attr->type.uuid[1]);
+
+    switch (uuid)
+    {
+    case MCS_UUID_CHAR_IDENTIFICATION:
+      evt.evt_id = MSC_EVT_IDENTIFICATON_READ;
+      m_mcs.app_cb(&evt);
+
+      *p_len = 4;
+      osal_memcpy(p_value, (uint8_t *) m_mcs.chars.value.identification, 4);
+      break;
+
+    case MCS_UUID_CHAR_MODE_SELECTION:
+      evt.evt_id = MSC_EVT_MODE_READ;
+      m_mcs.app_cb(&evt);
+
+      *p_len = 1;
+      osal_memcpy(p_value, m_mcs.chars.value.mode_selection, 1);
+      break;
+
+    case MCS_UUID_CHAR_CLICK_AVAILABLE:
+      evt.evt_id = MSC_EVT_CLICK_COUNT_READ;
+      m_mcs.app_cb(&evt);
+
+      *p_len = 1;
+      osal_memcpy(p_value, m_mcs.chars.value.click_count, 1);
+      break;
+
+    case MCS_UUID_CHAR_BOTTLE_REPLACEMENT:
+      evt.evt_id = MSC_EVT_BOTTLE_REPLACEMENT_READ;
+      m_mcs.app_cb(&evt);
+
+      *p_len = 1;
+      osal_memcpy(p_value, m_mcs.chars.value.bottle_replacement, 1);
+      break;
+
+    default:
+      break;
+    }
+  }
+
   return (status);
 }
 

@@ -34,6 +34,7 @@
 #include "ota_app_service.h"
 #include "bsp.h"
 #include "ble_misc_services.h"
+#include "sys.h"
 
 /*********************************************************************
  * MACROS
@@ -185,7 +186,7 @@ void bleuart_Init(uint8 task_id)
   // Setup the GAP Peripheral Role Profile
   {
     // device starts advertising upon initialization
-    uint8 initial_advertising_enable = TRUE;
+    uint8 initial_advertising_enable = FALSE;
 
     uint8 enable_update_request = DEFAULT_ENABLE_UPDATE_REQUEST;
     uint8 advChnMap = GAP_ADVCHAN_37 | GAP_ADVCHAN_38 | GAP_ADVCHAN_39;
@@ -251,11 +252,16 @@ void bleuart_Init(uint8 task_id)
   DevInfo_AddService();                      // Device Information Service
 
   // bleuart_AddService(on_bleuartServiceEvt);
-  mcs_add_service();
+  mcs_add_service(sys_on_ble_mcs_service_evt);
   bsp_init();
 
   // Setup a delayed profile startup
   osal_set_event(bleuart_TaskID, BUP_OSAL_EVT_START_DEVICE);
+}
+
+void ble_adv_enable(bool enable)
+{
+  GAPRole_SetParameter(GAPROLE_ADVERT_ENABLED, sizeof(uint8), &enable);
 }
 
 static void BUP_ProcessOSALMsg(osal_event_hdr_t *pMsg)
@@ -312,7 +318,7 @@ uint16 bleuart_ProcessEvent(uint8 task_id, uint16 events)
   // enable adv
   if (events & BUP_OSAL_EVT_RESET_ADV)
   {
-    uint8 initial_advertising_enable = TRUE;
+    uint8 initial_advertising_enable = FALSE;
 
     GAPRole_SetParameter(GAPROLE_ADVERT_ENABLED, sizeof(uint8), &initial_advertising_enable);
 
@@ -416,6 +422,7 @@ static void bleuart_StateNotificationCB(gaprole_States_t newState)
   case GAPROLE_CONNECTED_ADV:
     break;
   case GAPROLE_WAITING:
+    ble_adv_enable(false);
     break;
 
   case GAPROLE_WAITING_AFTER_TIMEOUT:

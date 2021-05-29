@@ -12,6 +12,9 @@
 /* Includes ----------------------------------------------------------- */
 #include "bsp.h"
 #include "log.h"
+#include "flash.h"
+#include "sys.h"
+#include "damos_ram.h"
 
 /* Private defines ---------------------------------------------------- */
 /* Function definitions ----------------------------------------------- */
@@ -31,6 +34,35 @@ void bsp_init(void)
 
   hal_gpioin_register(USER_BUTTON, NULL, bsp_pin_event_handler);
   hal_gpioin_register(HALL_SENSOR_LOGIC, NULL, bsp_pin_event_handler);
+
+  bsp_flash_read(IDENTIFICATION_FLASH_ADDR, (uint8_t *) &g_dispenser.identification, 4);
+  bsp_flash_read(MODE_SELECTED_FLASH_ADDR, (uint8_t *) &g_dispenser.mode_selected, 1);
+
+  if (g_dispenser.mode_selected != SYS_TRANSMIT_1_CLICK  &&
+      g_dispenser.mode_selected != SYS_TRANSMIT_5_CLICK  &&
+      g_dispenser.mode_selected != SYS_TRANSMIT_10_CLICK &&
+      g_dispenser.mode_selected != SYS_TRANSMIT_20_CLICK)
+  {
+    g_dispenser.mode_selected = SYS_TRANSMIT_1_CLICK;
+  }
+
+  LOG("Initial identification: %lu\n", g_dispenser.identification);
+  LOG("Initial mode selected : %d\n", g_dispenser.mode_selected);
+}
+
+uint8_t bsp_flash_erase(uint32_t section_to_erase)
+{
+  return hal_flash_erase_sector(section_to_erase);
+}
+
+uint8_t bsp_flash_write(uint32_t addr, uint8_t *data , uint32_t len)
+{
+  return hal_flash_write(addr, data, len);
+}
+
+uint8_t bsp_flash_read(uint32_t addr, uint8_t *data, uint32_t len)
+{
+  return hal_flash_read(addr, data, len);
 }
 
 /* End of file -------------------------------------------------------- */

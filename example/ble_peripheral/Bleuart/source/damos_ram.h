@@ -20,8 +20,10 @@
 /* Public enumerate/structure ----------------------------------------- */
 typedef struct
 {
-  uint8_t mode_selected;
-  uint8_t click_count;
+  uint8_t  mode_selected;        // Mode selected
+  uint8_t  click_count;          // Click availble value
+  uint32_t identification;       // Identification value;
+  uint8_t  bottle_replacement;   // Bottle replacement value;
 }
 device_t;
 
