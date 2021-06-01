@@ -1,31 +1,55 @@
 # ble-beacons-st17h66_fw_update
 
+After flashing the firmware, device will have the name is "disp".
+User will set the id for device then device will be change the name to "disp-id"
 
+ESP32 will filter device have the name "disp" and get the id from device name: "disp-id"
 
-## BLE Service: Miscellaneous (0xFFF0)
-### BLE Characterictic:
- + IDENFICATION  (0XFFF1)
- + MODE_SELECTED      (0XFFF2)
- + CLICK_COUNT        (0XFFF3)
- + BOTTLE_REPLACEMENT (0XFFF4)
+Device will have 3 case to broadcast the advertising service:
 
-## MODE:
-There will be 4 operational modes - default mode 1
-- Mode 1- Advertising after the 1th click
-- Mode 2- Advertising after the 5th click
-- Mode 3- Advertising after the 10th click
-- Mode 4- Advertising after the 20th click
++ Case 1. Broadcast without custom service
++ Case 2. Broadcast with Device Setting custom service
++ Case 3. Broadcast with Miscellaneous custom service
 
-## BEHAVIOR:
-- To set IDENFICATION to device pressed button 1 time, device advertising, then connect phone and set IDENFICATION to device
-Format is 4 Byte Unsigne Int Little Edian. When set success device will reset and new IDENFICATION was set even device POWER OFF
+## BEHAVIOR
 
-- To set MODE_SELECTED to device pressed button 1 time, device advertising, then connect phone and set MODE_SELECTED to device
-Format is 1 Byte Unsigne Int Little Edian. When set success device will reset and new MODE_SELECTED was set even device POWER OFF
+1. When device power up, device will be in the "Case 1"
 
-- When device power up device is in the NORMAL MODE (no advertised). When click reach the click of the mode, or button pressed
-device start advertised. If hall still pressed click still count. Button still pressed bottle still count
+2. Case 2
 
-- When ESP32 conneted to device. It will read out the IDENFICATION, MODE_SELECTED, CLICK_COUNT, 
++ To set IDENFICATION_SET, MODE_SET to device pressed button long (5+ second) and one click short , device advertising "Case 2", then connect phone and set IDENFICATION and MODE to device
+
++ IDENFICATION_SET: Format is 4 Byte Unsigne Int Little Edian.
++ MODE_SET: Format is 1 Byte Unsigne Int Little Edian.
+
++ When set success, phone disconnect to the device, device will go to "Case 1"
+
+3. When device have click the same at mode, or bottle availble. Device will be change to "Case 3". The ESP32 will connect and get the value then reset the data.
+When ESP32 conneted to device. It will read out the MODE_SELECTED, CLICK_COUNT,
 BOTTLE_REPLACEMENT. Device will reset CLICK_COUNT, BOTTLE_REPLACEMENT to 0 after read success.
-ESP32 disconneted to device. Device go to the NORMAL MODE ( no advertised)
+ESP32 disconneted to device. Device go to the  "Case 1"
+
+## BLE Service: Device Setting (0xFFF0)
+
+### BLE Characterictic
+
++ IDENFICATION_SET       (0XFFF1)
++ MODE_SET               (0XFFF2)
+
+## BLE Service: Miscellaneous (0xFFF3)
+
+### BLE Characterictic
+
++ IDENFICATION       (0XFFF4) (Backup)
++ MODE_SELECTED      (0XFFF5)
++ CLICK_COUNT        (0XFFF6)
++ BOTTLE_REPLACEMENT (0XFFF7)
+
+## MODE
+
+There will be 4 operational modes - default mode 1
+
++ Mode 1- Advertising Miscellaneous service after the 1th click
++ Mode 2- Advertising Miscellaneous service after the 5th click
++ Mode 3- Advertising Miscellaneous service after the 10th click
++ Mode 4- Advertising Miscellaneous service after the 20th click
