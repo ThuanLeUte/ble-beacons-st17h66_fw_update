@@ -23,11 +23,11 @@
 #include "damos_ram.h"
 
 /* Private Defines ---------------------------------------------------------- */
-#define MCS_UUID_SERV                      (0xFFF0)
-#define MCS_UUID_CHAR_IDENTIFICATION       (0xFFF1)
-#define MCS_UUID_CHAR_MODE_SELECTION       (0xFFF2)
-#define MCS_UUID_CHAR_CLICK_AVAILABLE      (0xFFF3)
-#define MCS_UUID_CHAR_BOTTLE_REPLACEMENT   (0xFFF4)
+#define MCS_UUID_SERV                      (0xFFF3)
+#define MCS_UUID_CHAR_IDENTIFICATION       (0xFFF4)
+#define MCS_UUID_CHAR_MODE_SELECTION       (0xFFF5)
+#define MCS_UUID_CHAR_CLICK_AVAILABLE      (0xFFF6)
+#define MCS_UUID_CHAR_BOTTLE_REPLACEMENT   (0xFFF7)
 
 #define CHAR_IDENTIFICATION_VALUE_POS      (2)
 #define CHAR_MODE_SELECTION_VALUE_POS      (4)

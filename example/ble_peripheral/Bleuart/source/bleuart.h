@@ -71,6 +71,8 @@ extern uint16 gapConnHandle;
 void bleuart_Init( uint8 task_id );
 uint16 bleuart_ProcessEvent( uint8 task_id, uint16 events );
 void ble_adv_enable(bool enable);
+void ble_set_device_name(uint8 *data, uint8 len);
+
 
 extern uint8 Modify_BLEDevice_Data;
 extern uint8  advint;

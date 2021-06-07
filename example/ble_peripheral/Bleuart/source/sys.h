@@ -17,7 +17,7 @@
 #include "stdint.h"
 #include "gpio.h"
 #include "ble_misc_services.h"
-
+#include "ble_dvs_services.h"
 
 /* Private define ----------------------------------------------------------- */
 #define SECTOR_ADDR                 (0x1103F000)
@@ -34,6 +34,14 @@ typedef enum
 }
 sys_transmit_mode_t;
 
+typedef enum
+{
+   SYS_DEV_CASE_1 = 1
+  ,SYS_DEV_CASE_2 = 2
+  ,SYS_DEV_CASE_3 = 3
+}
+sys_device_case_t;
+
 /* Public defines ---------------------------------------------------- */
 /* Public function prototypes ---------------------------------------- */
 /**
@@ -46,6 +54,10 @@ sys_transmit_mode_t;
  * @return          None
  */
 void sys_on_ble_mcs_service_evt(mcs_evt_t *pev);
+void sys_on_ble_dss_service_evt(dss_evt_t *pev);
+void sys_init(void);
+void sys_ble_disconneted_state(void);
+
 
 #endif // __SYS_H
 

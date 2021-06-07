@@ -34,7 +34,9 @@
 #include "ota_app_service.h"
 #include "bsp.h"
 #include "ble_misc_services.h"
+#include "ble_dvs_services.h"
 #include "sys.h"
+#include "damos_ram.h"
 
 /*********************************************************************
  * MACROS
@@ -112,7 +114,7 @@ static uint8 scanRspData[] =
         // complete name
         21, // length of this data
         GAP_ADTYPE_LOCAL_NAME_COMPLETE,
-        'U', 'a', 'r', 't', '-', 'T', 'e', 's', 't', ' ',
+        'D', 'I', 'S', 'P', ' ', ' ', ' ', ' ', ' ', ' ',
         ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
 
 };
@@ -132,14 +134,14 @@ static uint8 advertData[] =
         0xff,
         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, //reserved data
 };
-
 // GAP GATT Attributes
-static uint8 attDeviceName[GAP_DEVICE_NAME_LEN] = "Uart-Test           ";
+static uint8 attDeviceName[GAP_DEVICE_NAME_LEN] = "DISP                ";
 
 /*********************************************************************
  * LOCAL FUNCTIONS
  */
 static void bleuart_StateNotificationCB(gaprole_States_t newState);
+void ble_set_device_name(uint8 *data, uint8 len);
 
 /*********************************************************************
  * PROFILE CALLBACKS
@@ -180,13 +182,16 @@ void bleuart_Init(uint8 task_id)
 {
   bleuart_TaskID = task_id;
 
+  // System init
+  sys_init();
+
   // Setup the GAP
   VOID GAP_SetParamValue(TGAP_CONN_PAUSE_PERIPHERAL, DEFAULT_CONN_PAUSE_PERIPHERAL);
 
   // Setup the GAP Peripheral Role Profile
   {
     // device starts advertising upon initialization
-    uint8 initial_advertising_enable = FALSE;
+    uint8 initial_advertising_enable = TRUE;
 
     uint8 enable_update_request = DEFAULT_ENABLE_UPDATE_REQUEST;
     uint8 advChnMap = GAP_ADVCHAN_37 | GAP_ADVCHAN_38 | GAP_ADVCHAN_39;
@@ -251,8 +256,19 @@ void bleuart_Init(uint8 task_id)
   GATTServApp_AddService(GATT_ALL_SERVICES); // GATT attributes
   DevInfo_AddService();                      // Device Information Service
 
-  // bleuart_AddService(on_bleuartServiceEvt);
-  mcs_add_service(sys_on_ble_mcs_service_evt);
+  if (g_dispenser.device_case == SYS_DEV_CASE_1)
+  {
+
+  }
+  else if (g_dispenser.device_case == SYS_DEV_CASE_2)
+  {
+    dss_add_service(sys_on_ble_dss_service_evt);
+  }
+  else if (g_dispenser.device_case == SYS_DEV_CASE_3)
+  {
+    mcs_add_service(sys_on_ble_mcs_service_evt);
+  }
+
   bsp_init();
 
   // Setup a delayed profile startup
@@ -318,7 +334,7 @@ uint16 bleuart_ProcessEvent(uint8 task_id, uint16 events)
   // enable adv
   if (events & BUP_OSAL_EVT_RESET_ADV)
   {
-    uint8 initial_advertising_enable = FALSE;
+    uint8 initial_advertising_enable = TRUE;
 
     GAPRole_SetParameter(GAPROLE_ADVERT_ENABLED, sizeof(uint8), &initial_advertising_enable);
 
@@ -409,20 +425,18 @@ static void bleuart_StateNotificationCB(gaprole_States_t newState)
   break;
 
   case GAPROLE_ADVERTISING:
-    hal_gpio_write(UART_INDICATE_LED, 0);
     LOG("advertising!\n");
     break;
 
   case GAPROLE_CONNECTED:
     GAPRole_GetParameter(GAPROLE_CONNHANDLE, &gapConnHandle);
-    hal_gpio_write(UART_INDICATE_LED, 1);
     LOG("connected handle[%d]!\n", gapConnHandle);
     break;
 
   case GAPROLE_CONNECTED_ADV:
     break;
   case GAPROLE_WAITING:
-    ble_adv_enable(false);
+    sys_ble_disconneted_state();
     break;
 
   case GAPROLE_WAITING_AFTER_TIMEOUT:
@@ -439,5 +453,12 @@ static void bleuart_StateNotificationCB(gaprole_States_t newState)
   VOID gapProfileState;
 }
 
+void ble_set_device_name(uint8 *data, uint8 len)
+{
+  uint8 dev_name[21] = {0};
+
+  osal_memcpy(dev_name, data, len);
+  osal_memcpy(&scanRspData[2], dev_name, 21);
+}
 /*********************************************************************
 *********************************************************************/

@@ -16,10 +16,16 @@
 /* Includes ----------------------------------------------------------- */
 #include "stdint.h"
 
-/* Public defines ---------------------------------------------------- */
+/* Public defines ----------------------------------------------------- */
+#define DEVICE_STORE_DATA_FS_ID      (0x88)
+#define DEVICE_FS_FLAG_DATA          (0xAA)
+
 /* Public enumerate/structure ----------------------------------------- */
 typedef struct
 {
+  uint8_t  device_name[21];      // Device name
+  uint8_t  device_case;          // Device case
+  uint8_t  fs_flag;              // FS flag
   uint8_t  mode_selected;        // Mode selected
   uint8_t  click_count;          // Click availble value
   uint32_t identification;       // Identification value;

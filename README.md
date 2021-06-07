@@ -17,7 +17,7 @@ Device will have 3 case to broadcast the advertising service:
 
 2. Case 2
 
-+ To set IDENFICATION_SET, MODE_SET to device pressed button long (5+ second) and one click short , device advertising "Case 2", then connect phone and set IDENFICATION and MODE to device
++ To set IDENFICATION_SET, MODE_SET to device pressed hall more than (5+ second) , device advertising "Case 2", then connect phone and set IDENFICATION and MODE to device
 
 + IDENFICATION_SET: Format is 4 Byte Unsigned Int Little Endian.
 + MODE_SET: Format is 1 Byte Unsigned Int Little Endian.

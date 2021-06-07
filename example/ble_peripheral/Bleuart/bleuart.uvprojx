@@ -573,6 +573,11 @@
               <FileType>1</FileType>
               <FilePath>.\source\ble_timer.c</FilePath>
             </File>
+            <File>
+              <FileName>ble_dvs_services.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\source\ble_dvs_services.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

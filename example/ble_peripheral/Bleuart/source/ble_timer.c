@@ -14,7 +14,9 @@
 #include "OSAL.h"
 
 /* Private define ----------------------------------------------------- */
-#define TIMER_EXPIRED_CLICK     (60 * 1000) // 60 Seconds
+#define TIMER_EXPIRED_CLICK_TIME         (60 * 1000) // 60 Seconds
+#define TIMER_INTERRUPT_HANDLER_TIME     (500)       // 0.5 Seconds
+#define TIMER_BUTTON_HANDLER_TIME        (100)       // 0.1 Seconds
 
 /* Private variable --------------------------------------------------- */
 static uint8_t m_task_id = 0;
@@ -29,7 +31,15 @@ void ble_timer_start(uint16_t event_id)
 {
   if (event_id == TIMER_EXPIRED_CLICK_EVT)
   {
-    osal_start_timerEx(m_task_id, event_id, TIMER_EXPIRED_CLICK);
+    osal_start_timerEx(m_task_id, event_id, TIMER_EXPIRED_CLICK_TIME);
+  }
+  else if(event_id == TIMER_INTERRUPT_HANDLER_EVT)
+  {
+    osal_start_reload_timer(m_task_id, event_id, TIMER_INTERRUPT_HANDLER_TIME);
+  }
+  else if(event_id == TIMER_HALL_HANDLER_EVT)
+  {
+    osal_start_reload_timer(m_task_id, event_id, TIMER_BUTTON_HANDLER_TIME);
   }
 }
 
@@ -42,9 +52,20 @@ uint16_t ble_timer_process_event(uint8_t task_id, uint16_t events)
 {
   if (events & TIMER_EXPIRED_CLICK_EVT)
   {
-    ble_timer_callback();
+    ble_timer_expired_click();
     return (events ^ TIMER_EXPIRED_CLICK_EVT);
   }
+  else if (events & TIMER_INTERRUPT_HANDLER_EVT)
+  {
+    ble_timer_interrupt_handler();
+    return (events ^ TIMER_INTERRUPT_HANDLER_EVT);
+  }
+  else if (events & TIMER_HALL_HANDLER_EVT)
+  {
+    ble_timer_hall_handler();
+    return (events ^ TIMER_HALL_HANDLER_EVT);
+  }
+
   return 0;
 }
 

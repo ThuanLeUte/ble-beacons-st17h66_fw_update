@@ -62,12 +62,12 @@ uint8 osal_snv_init( void )
 uint8 osal_snv_read( osalSnvId_t id, osalSnvLen_t len, void *pBuf)
 {
     int ret;
-//	LOG("osal_snv_read:%x\n",id);
+	LOG("osal_snv_read:%x\n",id);
     ret = hal_fs_item_read((uint16_t)id,(uint8_t*) pBuf, (uint16_t)len,NULL);
 
     if(ret != PPlus_SUCCESS)
     {
-//		LOG("rd_ret:%d\n",ret);
+		LOG("rd_ret:%d\n",ret);
         return NV_OPER_FAILED;
     }
 
@@ -78,7 +78,7 @@ uint8 osal_snv_read( osalSnvId_t id, osalSnvLen_t len, void *pBuf)
 uint8 osal_snv_write( osalSnvId_t id, osalSnvLen_t len, void *pBuf)
 {
     int ret = PPlus_SUCCESS;
-//	LOG("osal_snv_write:%x,%d\n",id,len);
+	LOG("osal_snv_write:%x,%d\n",id,len);
 //	LOG_DUMP_BYTE(pBuf, len);
 
     if(hal_fs_get_free_size() < len+32)
@@ -97,7 +97,7 @@ uint8 osal_snv_write( osalSnvId_t id, osalSnvLen_t len, void *pBuf)
 
     if(ret !=0)
     {
-//		LOG("wr_ret:%d\n",ret);
+		LOG("wr_ret:%d\n",ret);
         return NV_OPER_FAILED;
     }
 

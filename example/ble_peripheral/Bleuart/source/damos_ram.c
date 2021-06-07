@@ -16,10 +16,13 @@
 /* Public variables --------------------------------------------------- */
 device_t g_dispenser =
 {
-  .identification     = 123456789,
+  .identification     = 0,
   .mode_selected      = 1,
   .click_count        = 0,
   .bottle_replacement = 0,
+  .device_name        = {'D', 'I', 'S', 'P'},
+  .fs_flag            = 0,
+  .device_case        = 1,
 };
 
 /* End of file -------------------------------------------------------- */
