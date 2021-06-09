@@ -1,33 +1,37 @@
 # ble-beacons-st17h66_fw_update
 
-After flashing the firmware, device will have the name is "disp".
-User will set the id for device then device will be change the name to "disp-id"
+After flashing the firmware, the device will have the name "DISP".
 
-ESP32 will filter device have the name "disp" and get the id from device name: "disp-id"
+The user will set the ID for the device then the device will change the name to "DISP-ID".
 
-Device will have 3 case to broadcast the advertising service:
+ESP32 will filter the device have the name "DIS" and get the ID from device name: "DISP-ID".
 
-+ **Case 1.** Broadcast without custom service
-+ **Case 2.** Broadcast with Device Setting custom service
-+ **Case 3.** Broadcast with Miscellaneous custom service
+The device will have 3 CASE to broadcast the advertising service:
+
++ **CASE 1.** Broadcast without custom service.
++ **CASE 2.** Broadcast with Device Setting custom service.
++ **CASE 3.** Broadcast with Miscellaneous custom service.
 
 ## BEHAVIOR
 
-1. When device power up, device will be in the "Case 1"
+1. CASE 1: 
+  + The device is in the idle state, broadcast without custom service.
+  + The device power up will be in CASE 1.
 
-2. Case 2
+2. CASE 2: 
+  + For setting identification, mode.
+  + Enter to CASE 2 by pressing hall sensor for more than 5 seconds.
+  + Connect phone to set the IDENFICATION_SET and MODE_SET.
+  + IDENFICATION_SET: Format is 4 Byte Unsigned Int Little Endian.
+  + MODE_SET: Format is 1 Byte Unsigned Int Little Endian.
+  + When the device is disconnected to phone, device will go to "CASE 1".
 
-+ To set IDENFICATION_SET, MODE_SET to device pressed hall more than (5+ second) , device advertising "Case 2", then connect phone and set IDENFICATION and MODE to device
-
-+ IDENFICATION_SET: Format is 4 Byte Unsigned Int Little Endian.
-+ MODE_SET: Format is 1 Byte Unsigned Int Little Endian.
-
-+ When set success, phone disconnect to the device, device will go to "Case 1"
-
-3. When device have click the same at mode, or bottle available. Device will be change to "Case 3". The ESP32 will connect and get the value then reset the data.
-When ESP32 connected to device. It will read out the MODE_SELECTED, CLICK_COUNT,
-BOTTLE_REPLACEMENT. Device will reset CLICK_COUNT, BOTTLE_REPLACEMENT to 0 after read success.
-ESP32 disconnected to device. Device go to the  "Case 1"
+3. CASE 3:
+  + Device will change to CASE 3 when the click count is equal to mode setting or bottle available.
+  + The ESP32 will connect and get the value from device.
+  + ESP32 will read out the MODE_SELECTED, CLICK_COUNT, BOTTLE_REPLACEMENT. 
+  + Device will reset CLICK_COUNT, BOTTLE_REPLACEMENT to 0 after read succeed.
+  + ESP32 disconnects with the device, the device will go to the  "CASE 1".
 
 ## BLE Service: Device Setting (0xFFF0)
 
