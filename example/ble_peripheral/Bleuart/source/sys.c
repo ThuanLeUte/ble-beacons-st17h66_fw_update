@@ -24,9 +24,11 @@
 /* Private variable --------------------------------------------------- */
 static const uint8_t MODE_TABLE[5] = { 0, 1, 5, 10, 20 };
 static uint16_t m_hall_time        = 0;
+static uint16_t m_btn_time         = 0;
 
 /* Function prototypes ------------------------------------------------ */
 static void m_sys_witch_to_case(sys_device_case_t _case, bool reset);
+static void m_sys_led_blink(uint8_t blink, uint8_t time);
 
 /* Function definitions ----------------------------------------------- */
 void sys_init(void)
@@ -87,36 +89,38 @@ void sys_ble_disconneted_state(void)
 
 void bsp_pin_event_handler(GPIO_Pin_e pin, IO_Wakeup_Pol_e type)
 {
-  hal_gpio_write(LED_INDICATE, 1);
-
   if (USER_BUTTON == pin)
   {
     LOG("Button is pressed \n");
-    g_dispenser.bottle_replacement = 1;
-    ble_timer_start(TIMER_INTERRUPT_HANDLER_EVT);
-
-    LOG("Bottle replacement = %d\n", g_dispenser.bottle_replacement);
+    m_btn_time = 5000;
+    ble_timer_start(TIMER_BUTTON_HANDLER_EVT);
   }
   else if (HALL_SENSOR_LOGIC == pin)
   {
+    LOG("Hall is pressed \n");
     m_hall_time = 5000;
     ble_timer_start(TIMER_HALL_HANDLER_EVT);
   }
-
-  hal_gpio_write(LED_INDICATE, 0);
 }
 
-void ble_timer_expired_click(void)
+void ble_timer_button_handler(void)
 {
-  LOG("Click: %d, Mode: %d\n", g_dispenser.click_count, g_dispenser.mode_selected);
-  m_sys_witch_to_case(SYS_DEV_CASE_3, true);
-}
-
-void ble_timer_interrupt_handler(void)
-{
-  if (g_dispenser.bottle_replacement)
+  if (m_btn_time != 0)
   {
-    m_sys_witch_to_case(SYS_DEV_CASE_3, true);
+    m_btn_time -= 100;
+
+    if (hal_gpio_read(USER_BUTTON) == 1)
+    {
+      ble_timer_stop(TIMER_HALL_HANDLER_EVT);
+    }
+    else if (m_btn_time == 0)
+    {
+      LOG("Bottle available \n");
+      g_dispenser.bottle_replacement = 1;
+
+      m_sys_led_blink(2, 2);
+      m_sys_witch_to_case(SYS_DEV_CASE_3, true);
+    }
   }
 }
 
@@ -128,13 +132,22 @@ void ble_timer_hall_handler(void)
 
     if (hal_gpio_read(HALL_SENSOR_LOGIC) == 1)
     {
+      m_sys_led_blink(1, 1);
+
       ble_timer_stop(TIMER_HALL_HANDLER_EVT);
       ble_timer_start(TIMER_EXPIRED_CLICK_EVT);
 
       if (++g_dispenser.click_count >= MODE_TABLE[g_dispenser.mode_selected])
       {
         LOG("Click: %d, Mode: %d\n", g_dispenser.click_count, g_dispenser.mode_selected);
-        m_sys_witch_to_case(SYS_DEV_CASE_3, true);
+        if (g_dispenser.device_case != SYS_DEV_CASE_3)
+        {
+          m_sys_witch_to_case(SYS_DEV_CASE_3, true);
+        }
+        else
+        {
+          osal_snv_write(DEVICE_STORE_DATA_FS_ID, sizeof(device_t) / sizeof(uint8_t), &g_dispenser);
+        }
       }
 
       LOG("Mode select = %d, max click = %d\n", g_dispenser.mode_selected, MODE_TABLE[g_dispenser.mode_selected]);
@@ -145,8 +158,16 @@ void ble_timer_hall_handler(void)
   {
     g_dispenser.bottle_replacement = 0;
     g_dispenser.click_count        = 0;
+
+    m_sys_led_blink(3, 2);
     m_sys_witch_to_case(SYS_DEV_CASE_2, true);
   }
+}
+
+void ble_timer_expired_click(void)
+{
+  LOG("Time expired, Click: %d, Mode: %d\n", g_dispenser.click_count, g_dispenser.mode_selected);
+  m_sys_witch_to_case(SYS_DEV_CASE_3, true);
 }
 
 void sys_on_ble_mcs_service_evt(mcs_evt_t *pev)
@@ -229,6 +250,21 @@ static void m_sys_witch_to_case(sys_device_case_t _case, bool reset)
   {
     LOG("Reset device\n");
     hal_system_soft_reset();
+  }
+}
+
+static void m_sys_led_blink(uint8_t blink, uint8_t time)
+{
+  for (uint8_t j = 0; j < time; j++)
+  {
+    for (uint8_t i = 0; i < blink; i++)
+    {
+      hal_gpio_write(LED_INDICATE, 1);
+      WaitMs(50);
+      hal_gpio_write(LED_INDICATE, 0);
+      WaitMs(50);
+    }
+    WaitMs(200);
   }
 }
 

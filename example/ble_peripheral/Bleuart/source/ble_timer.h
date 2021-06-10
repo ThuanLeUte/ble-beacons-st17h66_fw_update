@@ -18,7 +18,7 @@
 
 /* Public defines ---------------------------------------------------- */
 #define TIMER_EXPIRED_CLICK_EVT       (0x0001)
-#define TIMER_INTERRUPT_HANDLER_EVT   (0x0002)
+#define TIMER_BUTTON_HANDLER_EVT   (0x0002)
 #define TIMER_HALL_HANDLER_EVT      (0x0004)
 
 /* Public Callbacks -------------------------------------------------- */
@@ -32,7 +32,7 @@
  * @return          None
  */
 void ble_timer_expired_click(void); 
-void ble_timer_interrupt_handler(void); 
+void ble_timer_button_handler(void); 
 void ble_timer_hall_handler(void);
 
 
