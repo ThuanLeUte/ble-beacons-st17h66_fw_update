@@ -14,11 +14,11 @@ The device will have 3 CASE to broadcast the advertising service:
 
 ## BEHAVIOR
 
-1. CASE 1: 
+1. **CASE 1:** 
   + The device is in the idle state, broadcast without custom service.
   + The device power up will be in CASE 1.
 
-2. CASE 2: 
+2. **CASE 2:** 
   + For setting identification, mode.
   + Enter to CASE 2 by pressing hall sensor for more than 5 seconds.
   + Connect phone to set the IDENFICATION_SET and MODE_SET.
@@ -26,7 +26,7 @@ The device will have 3 CASE to broadcast the advertising service:
   + MODE_SET: Format is 1 Byte Unsigned Int Little Endian.
   + When the device is disconnected to phone, device will go to "CASE 1".
 
-3. CASE 3:
+3. **CASE 3:**
   + The device will change to CASE 3 when the click count (hall sensor) is equal to mode setting value.
   + The device will change to CASE 3 when the button is press more than 5 seconds (bottle available).
   + The ESP32 will connect and get the value from device.
@@ -50,10 +50,10 @@ The device will have 3 CASE to broadcast the advertising service:
 
 ### BLE Characteristics
 
-+ IDENFICATION        (0XFFF4) (Backup)
-+ MODE_SELECTED       (0XFFF5)
-+ CLICK_COUNT         (0XFFF6)
-+ BOTTLE_REPLACEMENT  (0XFFF7)
++ IDENFICATION         (0XFFF4) (Backup)
++ MODE_SELECTED        (0XFFF5)
++ CLICK_COUNT          (0XFFF6)
++ BOTTLE_REPLACEMENT   (0XFFF7)
 
 ## MODE
 
