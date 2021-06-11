@@ -20,6 +20,7 @@
 ".\objects\gattservapp.o"
 ".\objects\ota_app_service.o"
 ".\objects\devinfoservice.o"
+".\objects\battservice.o"
 ".\objects\jump_table.o"
 "..\..\..\lib\rf.lib"
 "..\..\..\lib\ble_host.lib"

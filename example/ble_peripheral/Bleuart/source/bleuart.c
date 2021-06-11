@@ -37,6 +37,7 @@
 #include "ble_dvs_services.h"
 #include "sys.h"
 #include "damos_ram.h"
+#include "battservice.h"
 
 /*********************************************************************
  * MACROS
@@ -269,6 +270,7 @@ void bleuart_Init(uint8 task_id)
     mcs_add_service(sys_on_ble_mcs_service_evt);
   }
 
+  Batt_AddService();
   bsp_init();
 
   // Setup a delayed profile startup
