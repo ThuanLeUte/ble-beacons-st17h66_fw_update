@@ -12,6 +12,7 @@
 ".\objects\osal_snv.o"
 ".\objects\flash.o"
 ".\objects\fs.o"
+".\objects\adc.o"
 ".\objects\central.o"
 ".\objects\gap.o"
 ".\objects\gapbondmgr.o"

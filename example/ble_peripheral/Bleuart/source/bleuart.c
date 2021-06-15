@@ -111,18 +111,27 @@ static gaprole_States_t gapProfileState = GAPROLE_INIT;
 
 // GAP - SCAN RSP data (max size = 31 bytes)
 static uint8 scanRspData[] =
-    {
+{
         // complete name
         21, // length of this data
         GAP_ADTYPE_LOCAL_NAME_COMPLETE,
         'D', 'I', 'S', 'P', ' ', ' ', ' ', ' ', ' ', ' ',
         ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-
 };
 
-// advert data for bleuart
-static uint8 advertData[] =
-    {
+static uint8 advert_data_case_1[] =
+{
+        0x02, // length of this data
+        GAP_ADTYPE_FLAGS,
+        DEFAULT_DISCOVERABLE_MODE | GAP_ADTYPE_FLAGS_BREDR_NOT_SUPPORTED,
+
+        0x09,
+        0xff,
+        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, //reserved data
+};
+
+static uint8 advert_data_case_2[] =
+{
         0x02, // length of this data
         GAP_ADTYPE_FLAGS,
         DEFAULT_DISCOVERABLE_MODE | GAP_ADTYPE_FLAGS_BREDR_NOT_SUPPORTED,
@@ -135,6 +144,22 @@ static uint8 advertData[] =
         0xff,
         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, //reserved data
 };
+
+static uint8 advert_data_case_3[] =
+{
+        0x02, // length of this data
+        GAP_ADTYPE_FLAGS,
+        DEFAULT_DISCOVERABLE_MODE | GAP_ADTYPE_FLAGS_BREDR_NOT_SUPPORTED,
+
+        0x03,
+        0x03, //Complete list of 16-bit UUIDs
+        0xf3, 0xff,
+
+        0x09,
+        0xff,
+        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, //reserved data
+};
+
 // GAP GATT Attributes
 static uint8 attDeviceName[GAP_DEVICE_NAME_LEN] = "DISP                ";
 
@@ -231,7 +256,24 @@ void bleuart_Init(uint8 task_id)
     GAPRole_SetParameter(GAPROLE_ADVERT_OFF_TIME, sizeof(uint16), &gapRole_AdvertOffTime);
 
     GAPRole_SetParameter(GAPROLE_SCAN_RSP_DATA, sizeof(scanRspData), scanRspData);
-    GAPRole_SetParameter(GAPROLE_ADVERT_DATA, sizeof(advertData), advertData);
+
+    switch (g_dispenser.device_case)
+    {
+    case SYS_DEV_CASE_1:
+      GAPRole_SetParameter(GAPROLE_ADVERT_DATA, sizeof(advert_data_case_1), advert_data_case_1);
+      break;
+    
+    case SYS_DEV_CASE_2:
+      GAPRole_SetParameter(GAPROLE_ADVERT_DATA, sizeof(advert_data_case_2), advert_data_case_2);
+      break;
+
+    case SYS_DEV_CASE_3:
+      GAPRole_SetParameter(GAPROLE_ADVERT_DATA, sizeof(advert_data_case_3), advert_data_case_3);
+      break;
+
+    default:
+      break;
+    }
 
     GAPRole_SetParameter(GAPROLE_PARAM_UPDATE_ENABLE, sizeof(uint8), &enable_update_request);
     GAPRole_SetParameter(GAPROLE_MIN_CONN_INTERVAL, sizeof(uint16), &desired_min_interval);
@@ -457,10 +499,10 @@ static void bleuart_StateNotificationCB(gaprole_States_t newState)
 
 void ble_set_device_name(uint8 *data, uint8 len)
 {
-  uint8 dev_name[21] = {0};
+  uint8 dev_name[15] = {0};
 
   osal_memcpy(dev_name, data, len);
-  osal_memcpy(&scanRspData[2], dev_name, 21);
+  osal_memcpy(&scanRspData[2], dev_name, 15);
 }
 /*********************************************************************
 *********************************************************************/
