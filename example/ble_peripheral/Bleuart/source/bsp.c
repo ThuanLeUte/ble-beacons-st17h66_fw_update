@@ -44,8 +44,8 @@ void bsp_init(void)
 
   hal_gpioin_register(USER_BUTTON, NULL, bsp_pin_event_handler);
   hal_gpioin_register(HALL_SENSOR_LOGIC, NULL, bsp_pin_event_handler);
-	
-	bsp_battery_init();
+
+  bsp_battery_init();
 }
 
  /**
