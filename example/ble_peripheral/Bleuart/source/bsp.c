@@ -40,7 +40,7 @@ void bsp_init(void)
   hal_gpio_pull_set(LED_INDICATE, GPIO_PULL_UP);
 
   hal_gpio_write(LED_INDICATE, 0);
-  hal_gpio_write(HALL_SENSOR_PWM, 1);
+  hal_gpio_write(HALL_SENSOR_PWM, 0);
 
   hal_gpioin_register(USER_BUTTON, NULL, bsp_pin_event_handler);
   hal_gpioin_register(HALL_SENSOR_LOGIC, NULL, bsp_pin_event_handler);

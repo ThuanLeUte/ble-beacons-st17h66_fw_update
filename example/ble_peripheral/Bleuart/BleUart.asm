@@ -2160,7 +2160,7 @@
         0x1fff2866:    2100        .!      MOVS     r1,#0
         0x1fff2868:    2016        .       MOVS     r0,#0x16
         0x1fff286a:    f001f927    ..'.    BL       hal_gpio_write ; 0x1fff3abc
-        0x1fff286e:    2101        .!      MOVS     r1,#1
+        0x1fff286e:    2100        .!      MOVS     r1,#0
         0x1fff2870:    2007        .       MOVS     r0,#7
         0x1fff2872:    f001f923    ..#.    BL       hal_gpio_write ; 0x1fff3abc
         0x1fff2876:    4a05        .J      LDR      r2,[pc,#20] ; [0x1fff288c] = 0x1fff2891
@@ -21395,7 +21395,7 @@
 
     Input Comments:
     
-    p2430-3
+    p5118-3
     
     Component: ARM Compiler 5.06 update 6 (build 750) Tool: armasm [4d35ec]
     armasm --debug --diag_suppress=9931,9931,1602,1073 --cpu=Cortex-M0 --fpu=SoftVFP --apcs=/interwork/interwork --no_divide 
