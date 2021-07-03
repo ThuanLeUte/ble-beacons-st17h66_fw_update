@@ -2595,7 +2595,7 @@
         0x1fff2ba6:    2100        .!      MOVS     r1,#0
         0x1fff2ba8:    2016        .       MOVS     r0,#0x16
         0x1fff2baa:    f001fa07    ....    BL       hal_gpio_write ; 0x1fff3fbc
-        0x1fff2bae:    2100        .!      MOVS     r1,#0
+        0x1fff2bae:    2101        .!      MOVS     r1,#1
         0x1fff2bb0:    2007        .       MOVS     r0,#7
         0x1fff2bb2:    f001fa03    ....    BL       hal_gpio_write ; 0x1fff3fbc
         0x1fff2bb6:    4a05        .J      LDR      r2,[pc,#20] ; [0x1fff2bcc] = 0x1fff2bd1
@@ -23532,7 +23532,7 @@
 
     Input Comments:
     
-    p5118-3
+    p4e80-3
     
     Component: ARM Compiler 5.06 update 6 (build 750) Tool: armasm [4d35ec]
     armasm --debug --diag_suppress=9931,9931,1602,1073 --cpu=Cortex-M0 --fpu=SoftVFP --apcs=/interwork/interwork --no_divide 
@@ -23540,6 +23540,30 @@
     
     Component: ARM Compiler 5.06 update 6 (build 750) Tool: ArmCC [4d3637]
     ArmCC --c99 --split_sections --debug -c -o.\objects\bsp.o --depend=.\objects\bsp.d --cpu=Cortex-M0 --apcs=interwork -O3 --diag_suppress=9931 -I..\..\..\components\inc -I..\..\..\components\ble\controller -I..\..\..\components\osal\include -I..\..\..\components\common -I..\..\..\components\ble\include -I..\..\..\components\ble\hci -I..\..\..\components\ble\host -I..\..\..\components\Profiles\ota_app -I..\..\..\components\Profiles\DevInfo -I..\..\..\components\Profiles\SimpleProfile -I..\..\..\components\Profiles\Roles -I.\source -I..\..\..\components\libraries\crc16 -I..\..\..\components\driver\clock -I..\..\..\components\arch\cm0 -I..\..\..\components\driver\pwrmgr -I..\..\..\components\driver\uart -I..\..\..\components\driver\gpio -I..\..\..\components\driver\timer -I..\..\..\misc -I..\..\..\components\driver\log -I..\..\..\components\libraries\cliface -I..\..\..\components\driver\key -I..\..\..\components\driver\pwm -I..\..\..\components\driver\flash -I..\..\..\components\libraries\fs -I..\..\..\components\profiles\Batt -I..\..\..\components\profiles\HID -I..\..\..\components\driver\adc -I.\RTE\_Target_1 -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\Device\ARM\ARMCM0\Include -D__MICROLIB -DADV_NCONN_CFG=0x01 -DADV_CONN_CFG=0x02 -DSCAN_CFG=0x04 -DINIT_CFG=0x08 -DBROADCASTER_CFG=0x01 -DOBSERVER_CFG=0x02 -DPERIPHERAL_CFG=0x04 -DCENTRAL_CFG=0x08 -D__UVISION_VERSION=530 -D_RTE_ -DARMCM0 -D_RTE_ -DCFG_CP -DOSAL_CBTIMER_NUM_TASKS=1 -DHOST_CONFIG=4 -DHCI_TL_NONE=1 -DENABLE_LOG_ROM_=0 -D_BUILD_FOR_DTM_=0 -DDEBUG_INFO=1 -DDBG_ROM_MAIN=0 -DAPP_CFG=0 -DOSALMEM_METRICS=0 -DPHY_MCU_TYPE=MCU_BUMBEE_M0 -DCFG_SLEEP_MODE=PWR_MODE_SLEEP -DDEBUG_INFO=1 -DAT_UART=1 --omf_browse=.\objects\bsp.crf source\bsp.c
+    
+    
+    gap_linkmgr.o
+    
+    Component: ARM Compiler 5.05 (build 41) Tool: armlink [4d0eb9]
+    armlink --partial --no_add_relocs_to_undefined --no_generate_mapping_symbols --diag_suppress=6642 --cpu=Cortex-M0 --fpu=SoftVFP --output=.\objects\gap_linkmgr.o --vfemode=force
+
+    Input Comments:
+    
+    p2ab8-3
+    
+    Component: ARM Compiler 5.05 (build 41) Tool: armasm [4d0eb9]
+    armasm --diag_suppress=1602,1073 --cpu=Cortex-M0 --fpu=SoftVFP --apcs=/interwork/interwork --no_divide  C:\Users\ZQ\AppData\Local\Temp\p2ab8-2
+    
+    
+    
+    
+    gap_linkmgr.o
+    
+    Component: ARM Compiler 5.05 (build 41) Tool: ArmCC [4d0eb9]
+    ArmCC --c99 --split_sections -c -o.\objects\gap_linkmgr.o --depend=.\objects\gap_linkmgr.d --cpu=Cortex-M0 --apcs=interwork -O3 -I..\..\components\inc -I..\..\components\arch\cm0 -I..\..\components\osal\include -I..\..\components\driver\gpio -I..\..\components\driver\uart -I..\..\components\driver\log -I..\..\components\driver\flash -I..\..\components\driver\clock -I..\..\components\driver\timer -I..\..\components\ble\hci -I..\..\components\ble\host -I..\..\components\ble\controller -I..\..\components\ble\include -I..\..\misc -I.\source -ID:\Work\PhyPlus\GitLab\bbb_sdk\lib\generate_ble_host_lib\RTE -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.2.0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.2.0\Device\ARM\ARMCM0\Include -D__MICROLIB -DADV_NCONN_CFG=0x01 -DADV_CONN_CFG=0x02 -DSCAN_CFG=0x04 -DINIT_CFG=0x08 -DBROADCASTER_CFG=0x01 -DOBSERVER_CFG=0x02 -DPERIPHERAL_CFG=0x04 -DCENTRAL_CFG=0x08 -DHOST_CONFIG=0x4 -D_RTE_ -DARMCM0 -DCFG_CP -DDEBUG_INFO=0 -DPHY_MCU_TYPE=MCU_BUMBEE_M0 ..\..\components\ble_src\host\gap_linkmgr.c
+    
+    
+    
     
     
     ble_misc_services.o
@@ -23802,30 +23826,6 @@
     
     Component: ARM Compiler 5.05 (build 41) Tool: ArmCC [4d0eb9]
     ArmCC --c99 --split_sections -c -o.\objects\gap_devmgr.o --depend=.\objects\gap_devmgr.d --cpu=Cortex-M0 --apcs=interwork -O3 -I..\..\components\inc -I..\..\components\arch\cm0 -I..\..\components\osal\include -I..\..\components\driver\gpio -I..\..\components\driver\uart -I..\..\components\driver\log -I..\..\components\driver\flash -I..\..\components\driver\clock -I..\..\components\driver\timer -I..\..\components\ble\hci -I..\..\components\ble\host -I..\..\components\ble\controller -I..\..\components\ble\include -I..\..\misc -I.\source -ID:\Work\PhyPlus\GitLab\bbb_sdk\lib\generate_ble_host_lib\RTE -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.2.0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.2.0\Device\ARM\ARMCM0\Include -D__MICROLIB -DADV_NCONN_CFG=0x01 -DADV_CONN_CFG=0x02 -DSCAN_CFG=0x04 -DINIT_CFG=0x08 -DBROADCASTER_CFG=0x01 -DOBSERVER_CFG=0x02 -DPERIPHERAL_CFG=0x04 -DCENTRAL_CFG=0x08 -DHOST_CONFIG=0x4 -D_RTE_ -DARMCM0 -DCFG_CP -DDEBUG_INFO=0 -DPHY_MCU_TYPE=MCU_BUMBEE_M0 ..\..\components\ble_src\host\gap_devmgr.c
-    
-    
-    gap_linkmgr.o
-    
-    Component: ARM Compiler 5.05 (build 41) Tool: armlink [4d0eb9]
-    armlink --partial --no_add_relocs_to_undefined --no_generate_mapping_symbols --diag_suppress=6642 --cpu=Cortex-M0 --fpu=SoftVFP --output=.\objects\gap_linkmgr.o --vfemode=force
-
-    Input Comments:
-    
-    p2ab8-3
-    
-    Component: ARM Compiler 5.05 (build 41) Tool: armasm [4d0eb9]
-    armasm --diag_suppress=1602,1073 --cpu=Cortex-M0 --fpu=SoftVFP --apcs=/interwork/interwork --no_divide  C:\Users\ZQ\AppData\Local\Temp\p2ab8-2
-    
-    
-    
-    
-    gap_linkmgr.o
-    
-    Component: ARM Compiler 5.05 (build 41) Tool: ArmCC [4d0eb9]
-    ArmCC --c99 --split_sections -c -o.\objects\gap_linkmgr.o --depend=.\objects\gap_linkmgr.d --cpu=Cortex-M0 --apcs=interwork -O3 -I..\..\components\inc -I..\..\components\arch\cm0 -I..\..\components\osal\include -I..\..\components\driver\gpio -I..\..\components\driver\uart -I..\..\components\driver\log -I..\..\components\driver\flash -I..\..\components\driver\clock -I..\..\components\driver\timer -I..\..\components\ble\hci -I..\..\components\ble\host -I..\..\components\ble\controller -I..\..\components\ble\include -I..\..\misc -I.\source -ID:\Work\PhyPlus\GitLab\bbb_sdk\lib\generate_ble_host_lib\RTE -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.2.0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.2.0\Device\ARM\ARMCM0\Include -D__MICROLIB -DADV_NCONN_CFG=0x01 -DADV_CONN_CFG=0x02 -DSCAN_CFG=0x04 -DINIT_CFG=0x08 -DBROADCASTER_CFG=0x01 -DOBSERVER_CFG=0x02 -DPERIPHERAL_CFG=0x04 -DCENTRAL_CFG=0x08 -DHOST_CONFIG=0x4 -D_RTE_ -DARMCM0 -DCFG_CP -DDEBUG_INFO=0 -DPHY_MCU_TYPE=MCU_BUMBEE_M0 ..\..\components\ble_src\host\gap_linkmgr.c
-    
-    
-    
     
     
     gap_peridevmgr.o
