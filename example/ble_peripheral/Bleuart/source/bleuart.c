@@ -208,115 +208,115 @@ void bleuart_Init(uint8 task_id)
 {
   bleuart_TaskID = task_id;
 
-  // System init
-  sys_init();
+  // // System init
+  // sys_init();
 
-  // Setup the GAP
-  VOID GAP_SetParamValue(TGAP_CONN_PAUSE_PERIPHERAL, DEFAULT_CONN_PAUSE_PERIPHERAL);
+  // // Setup the GAP
+  // VOID GAP_SetParamValue(TGAP_CONN_PAUSE_PERIPHERAL, DEFAULT_CONN_PAUSE_PERIPHERAL);
 
-  // Setup the GAP Peripheral Role Profile
-  {
-    // device starts advertising upon initialization
-    uint8 initial_advertising_enable = TRUE;
+  // // Setup the GAP Peripheral Role Profile
+  // {
+  //   // device starts advertising upon initialization
+  //   uint8 initial_advertising_enable = TRUE;
 
-    uint8 enable_update_request = DEFAULT_ENABLE_UPDATE_REQUEST;
-    uint8 advChnMap = GAP_ADVCHAN_37 | GAP_ADVCHAN_38 | GAP_ADVCHAN_39;
+  //   uint8 enable_update_request = DEFAULT_ENABLE_UPDATE_REQUEST;
+  //   uint8 advChnMap = GAP_ADVCHAN_37 | GAP_ADVCHAN_38 | GAP_ADVCHAN_39;
 
-    // By setting this to zero, the device will go into the waiting state after
-    // being discoverable for 30.72 second, and will not being advertising again
-    // until the enabler is set back to TRUE
-    uint16 gapRole_AdvertOffTime = 0;
+  //   // By setting this to zero, the device will go into the waiting state after
+  //   // being discoverable for 30.72 second, and will not being advertising again
+  //   // until the enabler is set back to TRUE
+  //   uint16 gapRole_AdvertOffTime = 0;
 
-    uint16 desired_min_interval = DEFAULT_DESIRED_MIN_CONN_INTERVAL;
-    uint16 desired_max_interval = DEFAULT_DESIRED_MAX_CONN_INTERVAL;
-    uint16 desired_slave_latency = DEFAULT_DESIRED_SLAVE_LATENCY;
-    uint16 desired_conn_timeout = DEFAULT_DESIRED_CONN_TIMEOUT;
+  //   uint16 desired_min_interval = DEFAULT_DESIRED_MIN_CONN_INTERVAL;
+  //   uint16 desired_max_interval = DEFAULT_DESIRED_MAX_CONN_INTERVAL;
+  //   uint16 desired_slave_latency = DEFAULT_DESIRED_SLAVE_LATENCY;
+  //   uint16 desired_conn_timeout = DEFAULT_DESIRED_CONN_TIMEOUT;
 
-    uint8 peerPublicAddr[] = {
-        0x01,
-        0x02,
-        0x03,
-        0x04,
-        0x05,
-        0x06};
+  //   uint8 peerPublicAddr[] = {
+  //       0x01,
+  //       0x02,
+  //       0x03,
+  //       0x04,
+  //       0x05,
+  //       0x06};
 
-    /***************************************************************************************************************/
-    uint8 AT_mac_address[6];
-    hal_flash_read(0x4004, AT_mac_address, 2);
-    hal_flash_read(0x4000, AT_mac_address + 2, 4);
+  //   /***************************************************************************************************************/
+  //   uint8 AT_mac_address[6];
+  //   hal_flash_read(0x4004, AT_mac_address, 2);
+  //   hal_flash_read(0x4000, AT_mac_address + 2, 4);
 
-    /***************************************************************************************************************/
+  //   /***************************************************************************************************************/
 
-    GAPRole_SetParameter(GAPROLE_ADV_DIRECT_ADDR, sizeof(peerPublicAddr), peerPublicAddr);
-    // set adv channel map
-    GAPRole_SetParameter(GAPROLE_ADV_CHANNEL_MAP, sizeof(uint8), &advChnMap);
+  //   GAPRole_SetParameter(GAPROLE_ADV_DIRECT_ADDR, sizeof(peerPublicAddr), peerPublicAddr);
+  //   // set adv channel map
+  //   GAPRole_SetParameter(GAPROLE_ADV_CHANNEL_MAP, sizeof(uint8), &advChnMap);
 
-    // Set the GAP Role Parameters
-    GAPRole_SetParameter(GAPROLE_ADVERT_ENABLED, sizeof(uint8), &initial_advertising_enable);
-    GAPRole_SetParameter(GAPROLE_ADVERT_OFF_TIME, sizeof(uint16), &gapRole_AdvertOffTime);
+  //   // Set the GAP Role Parameters
+  //   GAPRole_SetParameter(GAPROLE_ADVERT_ENABLED, sizeof(uint8), &initial_advertising_enable);
+  //   GAPRole_SetParameter(GAPROLE_ADVERT_OFF_TIME, sizeof(uint16), &gapRole_AdvertOffTime);
 
-    GAPRole_SetParameter(GAPROLE_SCAN_RSP_DATA, sizeof(scanRspData), scanRspData);
+  //   GAPRole_SetParameter(GAPROLE_SCAN_RSP_DATA, sizeof(scanRspData), scanRspData);
 
-    switch (g_dispenser.device_case)
-    {
-    case SYS_DEV_CASE_1:
-      GAPRole_SetParameter(GAPROLE_ADVERT_DATA, sizeof(advert_data_case_1), advert_data_case_1);
-      break;
+  //   switch (g_dispenser.device_case)
+  //   {
+  //   case SYS_DEV_CASE_1:
+  //     GAPRole_SetParameter(GAPROLE_ADVERT_DATA, sizeof(advert_data_case_1), advert_data_case_1);
+  //     break;
     
-    case SYS_DEV_CASE_2:
-      GAPRole_SetParameter(GAPROLE_ADVERT_DATA, sizeof(advert_data_case_2), advert_data_case_2);
-      break;
+  //   case SYS_DEV_CASE_2:
+  //     GAPRole_SetParameter(GAPROLE_ADVERT_DATA, sizeof(advert_data_case_2), advert_data_case_2);
+  //     break;
 
-    case SYS_DEV_CASE_3:
-      GAPRole_SetParameter(GAPROLE_ADVERT_DATA, sizeof(advert_data_case_3), advert_data_case_3);
-      break;
+  //   case SYS_DEV_CASE_3:
+  //     GAPRole_SetParameter(GAPROLE_ADVERT_DATA, sizeof(advert_data_case_3), advert_data_case_3);
+  //     break;
 
-    default:
-      break;
-    }
+  //   default:
+  //     break;
+  //   }
 
-    GAPRole_SetParameter(GAPROLE_PARAM_UPDATE_ENABLE, sizeof(uint8), &enable_update_request);
-    GAPRole_SetParameter(GAPROLE_MIN_CONN_INTERVAL, sizeof(uint16), &desired_min_interval);
-    GAPRole_SetParameter(GAPROLE_MAX_CONN_INTERVAL, sizeof(uint16), &desired_max_interval);
-    GAPRole_SetParameter(GAPROLE_SLAVE_LATENCY, sizeof(uint16), &desired_slave_latency);
-    GAPRole_SetParameter(GAPROLE_TIMEOUT_MULTIPLIER, sizeof(uint16), &desired_conn_timeout);
-  }
+  //   GAPRole_SetParameter(GAPROLE_PARAM_UPDATE_ENABLE, sizeof(uint8), &enable_update_request);
+  //   GAPRole_SetParameter(GAPROLE_MIN_CONN_INTERVAL, sizeof(uint16), &desired_min_interval);
+  //   GAPRole_SetParameter(GAPROLE_MAX_CONN_INTERVAL, sizeof(uint16), &desired_max_interval);
+  //   GAPRole_SetParameter(GAPROLE_SLAVE_LATENCY, sizeof(uint16), &desired_slave_latency);
+  //   GAPRole_SetParameter(GAPROLE_TIMEOUT_MULTIPLIER, sizeof(uint16), &desired_conn_timeout);
+  // }
 
-  // Set the GAP Characteristics
-  osal_memcpy(attDeviceName, &scanRspData[2], 20);
-  GGS_SetParameter(GGS_DEVICE_NAME_ATT, GAP_DEVICE_NAME_LEN, attDeviceName);
+  // // Set the GAP Characteristics
+  // osal_memcpy(attDeviceName, &scanRspData[2], 20);
+  // GGS_SetParameter(GGS_DEVICE_NAME_ATT, GAP_DEVICE_NAME_LEN, attDeviceName);
 
-  // Set advertising interval
-  {
-    GAP_SetParamValue(TGAP_LIM_DISC_ADV_INT_MIN, advInt[advint]);
-    GAP_SetParamValue(TGAP_LIM_DISC_ADV_INT_MAX, advInt[advint]);
-    GAP_SetParamValue(TGAP_GEN_DISC_ADV_INT_MIN, advInt[advint]);
-    GAP_SetParamValue(TGAP_GEN_DISC_ADV_INT_MAX, advInt[advint]);
-  }
+  // // Set advertising interval
+  // {
+  //   GAP_SetParamValue(TGAP_LIM_DISC_ADV_INT_MIN, advInt[advint]);
+  //   GAP_SetParamValue(TGAP_LIM_DISC_ADV_INT_MAX, advInt[advint]);
+  //   GAP_SetParamValue(TGAP_GEN_DISC_ADV_INT_MIN, advInt[advint]);
+  //   GAP_SetParamValue(TGAP_GEN_DISC_ADV_INT_MAX, advInt[advint]);
+  // }
 
-  // Initialize GATT attributes
-  GGS_AddService(GATT_ALL_SERVICES);         // GAP
-  GATTServApp_AddService(GATT_ALL_SERVICES); // GATT attributes
-  DevInfo_AddService();                      // Device Information Service
+  // // Initialize GATT attributes
+  // GGS_AddService(GATT_ALL_SERVICES);         // GAP
+  // GATTServApp_AddService(GATT_ALL_SERVICES); // GATT attributes
+  // DevInfo_AddService();                      // Device Information Service
 
-  if (g_dispenser.device_case == SYS_DEV_CASE_1)
-  {
+  // if (g_dispenser.device_case == SYS_DEV_CASE_1)
+  // {
 
-  }
-  else if (g_dispenser.device_case == SYS_DEV_CASE_2)
-  {
-    dss_add_service(sys_on_ble_dss_service_evt);
-  }
-  else if (g_dispenser.device_case == SYS_DEV_CASE_3)
-  {
-    mcs_add_service(sys_on_ble_mcs_service_evt);
-  }
+  // }
+  // else if (g_dispenser.device_case == SYS_DEV_CASE_2)
+  // {
+  //   dss_add_service(sys_on_ble_dss_service_evt);
+  // }
+  // else if (g_dispenser.device_case == SYS_DEV_CASE_3)
+  // {
+  //   mcs_add_service(sys_on_ble_mcs_service_evt);
+  // }
 
-  Batt_AddService();
+  // Batt_AddService();
   bsp_init();
 
   // Setup a delayed profile startup
-  osal_set_event(bleuart_TaskID, BUP_OSAL_EVT_START_DEVICE);
+  // osal_set_event(bleuart_TaskID, BUP_OSAL_EVT_START_DEVICE);
 }
 
 void ble_adv_enable(bool enable)
